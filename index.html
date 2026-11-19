@@ -1,0 +1,670 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LOGISTIX PRO | Gestión Logística</title>
+<style>
+:root{
+--bg:#f3f5f8;--panel:#fff;--dark:#172b3b;--green:#16866c;
+--green2:#e5f4ef;--text:#263746;--muted:#82909c;
+--border:#e5eaf0;--red:#dc5d63;--yellow:#d69b38;
+--blue:#4385c5;--shadow:0 4px 18px #1b33430b;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Inter,Arial,sans-serif;color:var(--text)}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.app{display:flex;min-height:100vh}
+.sidebar{
+width:245px;background:var(--dark);color:white;padding:23px 15px;
+position:fixed;inset:0 auto 0 0;z-index:5;overflow-y:auto
+}
+.logo{padding:5px 12px 26px;font-size:21px;font-weight:850;letter-spacing:.5px}
+.logo span{color:#43c69b}
+.logo small{display:block;font-size:10px;color:#9eb1c0;letter-spacing:2px;margin-top:5px}
+.navlabel{font-size:10px;color:#8299aa;letter-spacing:1.5px;padding:17px 12px 8px}
+.nav button{
+display:flex;align-items:center;gap:12px;width:100%;padding:12px;
+border:0;border-radius:8px;background:transparent;color:#bdcbd5;
+text-align:left;margin:3px 0;font-size:13px
+}
+.nav button:hover,.nav button.active{background:#294455;color:white}
+.nav button.active{border-left:3px solid #43c69b}
+.navicon{width:22px;text-align:center;font-size:17px}
+.sidefoot{margin-top:35px;border-top:1px solid #ffffff18;padding:17px 10px;color:#a5b7c5;font-size:11px}
+.main{margin-left:245px;width:calc(100% - 245px)}
+.topbar{
+height:66px;background:white;border-bottom:1px solid var(--border);
+display:flex;justify-content:space-between;align-items:center;padding:0 30px;
+position:sticky;top:0;z-index:4
+}
+.topbar small{color:var(--muted)}
+.user{display:flex;align-items:center;gap:10px;font-size:13px}
+.avatar{background:var(--green2);color:var(--green);border-radius:50%;padding:10px;font-weight:bold}
+.content{padding:28px 30px;max-width:1600px;margin:auto}
+.heading{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:23px}
+.heading h1{font-size:25px;margin:0 0 5px}
+.heading p{font-size:13px;color:var(--muted);margin:0}
+.btn{border:0;border-radius:7px;padding:10px 15px;font-size:12px;font-weight:700}
+.primary{background:var(--green);color:white}
+.primary:hover{background:#106d56}
+.light{background:#edf2f5;color:var(--text)}
+.danger{background:#fff0f0;color:#b83f48}
+.grid{display:grid;gap:16px}
+.kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:18px;box-shadow:var(--shadow)}
+.kpi-top{display:flex;justify-content:space-between;align-items:center}
+.kpi-label{font-size:12px;color:var(--muted)}
+.kpi-icon{background:var(--green2);color:var(--green);padding:9px;border-radius:8px}
+.kpi-value{font-size:26px;font-weight:800;margin:12px 0 4px;letter-spacing:-1px}
+.kpi-note{font-size:11px;color:var(--muted)}
+.green{color:var(--green)}.red{color:var(--red)}.yellow{color:var(--yellow)}
+.two{grid-template-columns:1.4fr 1fr;margin-top:17px}
+.three{grid-template-columns:repeat(3,1fr)}
+.card h3{font-size:15px;margin:0 0 5px}
+.card .desc{font-size:11px;color:var(--muted);margin-bottom:16px}
+.baritem{display:grid;grid-template-columns:100px 1fr 45px;gap:10px;align-items:center;margin:15px 0;font-size:12px}
+.track{height:9px;border-radius:20px;background:#edf1f3;overflow:hidden}
+.fill{height:100%;border-radius:20px;background:var(--green)}
+table{width:100%;border-collapse:collapse;white-space:nowrap}
+th{font-size:11px;color:var(--muted);text-align:left;font-weight:600;padding:13px 10px;border-bottom:1px solid var(--border)}
+td{font-size:12px;padding:14px 10px;border-bottom:1px solid #eff2f5}
+tbody tr:hover{background:#fafcfd}
+.tablewrap{overflow-x:auto}
+.status{padding:5px 9px;border-radius:30px;font-size:10px;font-weight:700;display:inline-block}
+.ok{background:#e5f4ed;color:#16805f}
+.warn{background:#fff4df;color:#aa7419}
+.bad{background:#ffebeb;color:#c0444a}
+.info{background:#e9f1fc;color:#3d73b0}
+.actions{display:flex;gap:6px}
+.actions button{border:0;border-radius:5px;padding:6px 8px;font-size:11px;background:#edf2f5}
+.section{margin-top:19px}
+.search{border:1px solid var(--border);padding:10px 12px;border-radius:7px;width:230px}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}
+.filters select,.filters input{border:1px solid var(--border);padding:10px;border-radius:7px;background:white;font-size:12px}
+.formgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.field label{display:block;font-size:11px;font-weight:700;margin-bottom:6px}
+.field input,.field select{width:100%;padding:11px;border:1px solid var(--border);border-radius:7px}
+.formactions{display:flex;gap:9px;margin-top:15px}
+.alert{padding:12px;background:#fff5e5;border:1px solid #f3e1bd;color:#966519;border-radius:8px;font-size:12px;margin:10px 0}
+.success{padding:12px;background:#e9f6ef;color:#18714e;border-radius:8px;font-size:12px}
+.modulegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.modulebox{border:1px solid var(--border);padding:16px;border-radius:9px;background:#fafcfd}
+.modulebox strong{display:block;font-size:20px;margin:9px 0}
+.chartbars{height:190px;display:flex;align-items:end;justify-content:space-around;gap:13px;border-bottom:1px solid var(--border);padding:10px}
+.chartcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;height:100%;justify-content:end}
+.chartbar{width:min(40px,80%);background:#279777;border-radius:5px 5px 0 0;min-height:3px}
+.chartcol small{font-size:10px;color:var(--muted)}
+.route-list{display:grid;gap:9px}
+.route-stop{display:flex;align-items:center;gap:12px;padding:12px;background:#f7f9fa;border-radius:8px;font-size:12px}
+.route-number{background:var(--green);color:white;border-radius:50%;width:27px;height:27px;display:grid;place-items:center;font-weight:bold}
+.empty{text-align:center;padding:25px;color:var(--muted);font-size:13px}
+#toast{position:fixed;bottom:22px;right:22px;background:#203b35;color:white;padding:13px 18px;border-radius:8px;z-index:10;display:none;font-size:12px}
+@media(max-width:1000px){
+.sidebar{width:70px;padding:15px 8px}
+.logo{font-size:0;padding:10px}.logo:before{content:"LP";font-size:20px}
+.logo small,.navlabel,.nav button span:not(.navicon),.sidefoot{display:none}
+.nav button{justify-content:center;padding:13px 5px}
+.main{margin-left:70px;width:calc(100% - 70px)}
+.kpis{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:650px){
+.topbar{padding:0 13px}.content{padding:20px 13px}
+.heading{align-items:flex-start;flex-direction:column}
+.two,.three,.modulegrid{grid-template-columns:1fr}
+.formgrid{grid-template-columns:1fr}
+.search{width:100%}
+}
+@media print{
+.sidebar,.topbar,.noprint{display:none!important}
+.main{margin:0;width:100%}
+.content{padding:0}
+.card{box-shadow:none;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<aside class="sidebar">
+<div class="logo">LOGISTIX<span> PRO</span><small>LOGISTICS MANAGEMENT</small></div>
+<nav class="nav">
+<div class="navlabel">GENERAL</div>
+<button class="active" data-page="dashboard"><span class="navicon">▦</span><span>Panel principal</span></button>
+<div class="navlabel">OPERACIONES</div>
+<button data-page="inventory"><span class="navicon">▤</span><span>Inventario</span></button>
+<button data-page="orders"><span class="navicon">▣</span><span>Pedidos</span></button>
+<button data-page="suppliers"><span class="navicon">♙</span><span>Proveedores</span></button>
+<button data-page="warehouses"><span class="navicon">▥</span><span>Almacenes</span></button>
+<div class="navlabel">DISTRIBUCIÓN</div>
+<button data-page="fleet"><span class="navicon">▰</span><span>Flota y transporte</span></button>
+<button data-page="routes"><span class="navicon">⌖</span><span>Planificador de rutas</span></button>
+<button data-page="deliveries"><span class="navicon">✓</span><span>Entregas</span></button>
+<div class="navlabel">ANÁLISIS</div>
+<button data-page="reports"><span class="navicon">▥</span><span>Reportes e indicadores</span></button>
+</nav>
+<div class="sidefoot">LOGISTIX PRO v1.0<br>Prototipo de gestión logística<br>© 2026</div>
+</aside>
+
+<div class="main">
+<header class="topbar">
+<div><strong id="topTitle">Panel principal</strong><br><small id="today"></small></div>
+<div class="user"><span>Administrador</span><span class="avatar">AD</span></div>
+</header>
+<main class="content" id="view"></main>
+</div>
+</div>
+<div id="toast"></div>
+
+<script>
+// ==============================
+// 1. DATOS Y ALMACENAMIENTO
+// ==============================
+const initial={
+products:[
+{id:101,name:"Arroz 5 kg",category:"Alimentos",stock:120,min:40,cost:32,price:42,warehouse:"Central"},
+{id:102,name:"Aceite 1 L",category:"Alimentos",stock:25,min:35,cost:12,price:17,warehouse:"Central"},
+{id:103,name:"Azúcar 1 kg",category:"Alimentos",stock:180,min:50,cost:5,price:7,warehouse:"Central"},
+{id:104,name:"Detergente 2 kg",category:"Limpieza",stock:18,min:25,cost:19,price:26,warehouse:"Norte"},
+{id:105,name:"Leche en polvo",category:"Lácteos",stock:75,min:20,cost:25,price:34,warehouse:"Norte"},
+{id:106,name:"Fideos 500 g",category:"Alimentos",stock:210,min:60,cost:4,price:6,warehouse:"Central"},
+{id:107,name:"Jabón líquido",category:"Limpieza",stock:14,min:20,cost:15,price:22,warehouse:"Norte"},
+{id:108,name:"Galletas",category:"Snacks",stock:95,min:30,cost:7,price:10,warehouse:"Central"}
+],
+orders:[
+{id:5001,client:"Minimarket San José",product:"Arroz 5 kg",qty:20,total:840,date:"2026-11-15",status:"Entregado",zone:"Centro",x:3,y:2},
+{id:5002,client:"Tienda El Sol",product:"Aceite 1 L",qty:30,total:510,date:"2026-11-18",status:"Pendiente",zone:"Norte",x:8,y:8},
+{id:5003,client:"Comercial Andina",product:"Azúcar 1 kg",qty:50,total:350,date:"2026-11-18",status:"En preparación",zone:"Sur",x:2,y:8},
+{id:5004,client:"Minimarket Central",product:"Fideos 500 g",qty:40,total:240,date:"2026-11-19",status:"Pendiente",zone:"Centro",x:4,y:3},
+{id:5005,client:"Tienda La Familia",product:"Detergente 2 kg",qty:12,total:312,date:"2026-11-17",status:"Entregado",zone:"Este",x:8,y:4},
+{id:5006,client:"Comercial Norte",product:"Leche en polvo",qty:15,total:510,date:"2026-11-19",status:"En tránsito",zone:"Norte",x:9,y:9}
+],
+suppliers:[
+{id:1,name:"Distribuidora Andina",phone:"70123456",category:"Alimentos",lead:3},
+{id:2,name:"Importadora del Sur",phone:"71234567",category:"Limpieza",lead:5},
+{id:3,name:"Comercial La Paz",phone:"72345678",category:"Snacks",lead:2}
+],
+warehouses:[
+{name:"Almacén Central",location:"Zona Central",capacity:75,manager:"Carlos R."},
+{name:"Almacén Norte",location:"Zona Norte",capacity:52,manager:"María L."},
+{name:"Almacén Sur",location:"Zona Sur",capacity:30,manager:"Luis M."}
+],
+vehicles:[
+{id:"V-01",model:"Toyota Hilux",driver:"Roberto Pérez",capacity:1000,status:"Disponible",cost:180},
+{id:"V-02",model:"Nissan Frontier",driver:"Ana Flores",capacity:1200,status:"En ruta",cost:220},
+{id:"V-03",model:"Suzuki Carry",driver:"Miguel Rojas",capacity:700,status:"Disponible",cost:130}
+],
+history:[
+{date:"2026-11-16",type:"Entrada",product:"Arroz 5 kg",qty:50,reason:"Compra a proveedor"},
+{date:"2026-11-17",type:"Salida",product:"Aceite 1 L",qty:20,reason:"Pedido #5002"},
+{date:"2026-11-18",type:"Entrada",product:"Fideos 500 g",qty:80,reason:"Reposición"}
+],
+deliveries:[
+{id:5001,client:"Minimarket San José",date:"2026-11-15",status:"Entregado",cost:35,onTime:true},
+{id:5005,client:"Tienda La Familia",date:"2026-11-17",status:"Entregado",cost:42,onTime:true}
+],
+expenses:[180,220,130,155,190,175]
+};
+
+let db;
+try{
+ db=JSON.parse(localStorage.getItem("logistix_data"))||structuredClone(initial);
+}catch(e){db=structuredClone(initial)}
+
+function save(){
+ localStorage.setItem("logistix_data",JSON.stringify(db));
+}
+function money(n){
+ return "Bs "+Number(n).toLocaleString("es-BO",{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function dateToday(){
+ return new Date().toISOString().slice(0,10);
+}
+function toast(msg){
+ let el=document.getElementById("toast");
+ el.textContent=msg;el.style.display="block";
+ setTimeout(()=>el.style.display="none",2600);
+}
+function safe(s){
+ return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function statusTag(s){
+ let c=s==="Entregado"||s==="Disponible"?"ok":
+ s==="Pendiente"||s==="Stock bajo"?"warn":
+ s==="En tránsito"||s==="En ruta"?"info":"bad";
+ return `<span class="status ${c}">${safe(s)}</span>`;
+}
+function stockStatus(p){
+ return p.stock<=p.min?"Stock bajo":"Disponible";
+}
+function totalInventory(){
+ return db.products.reduce((a,p)=>a+p.stock*p.cost,0);
+}
+function deliveredCount(){
+ return db.deliveries.length;
+}
+function onTimeRate(){
+ if(!db.deliveries.length)return 0;
+ return Math.round(db.deliveries.filter(d=>d.onTime).length/db.deliveries.length*100);
+}
+function pendingOrders(){
+ return db.orders.filter(o=>o.status!=="Entregado").length;
+}
+function lowStock(){
+ return db.products.filter(p=>p.stock<=p.min);
+}
+
+// ==============================
+// 2. NAVEGACIÓN
+// ==============================
+const titles={
+dashboard:"Panel principal",inventory:"Gestión de inventario",
+orders:"Gestión de pedidos",suppliers:"Proveedores",
+warehouses:"Gestión de almacenes",fleet:"Flota y transporte",
+routes:"Planificador de rutas",deliveries:"Control de entregas",
+reports:"Reportes e indicadores"
+};
+let currentPage="dashboard";
+
+document.querySelectorAll("[data-page]").forEach(b=>{
+ b.addEventListener("click",()=>{
+  document.querySelectorAll("[data-page]").forEach(x=>x.classList.remove("active"));
+  b.classList.add("active");
+  currentPage=b.dataset.page;
+  render();
+ });
+});
+document.getElementById("today").textContent=new Date().toLocaleDateString("es-BO",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+
+// ==============================
+// 3. DASHBOARD
+// ==============================
+function dashboard(){
+ let revenue=db.orders.reduce((a,o)=>a+o.total,0);
+ let alerts=lowStock();
+ let salesByMonth=[12,18,15,24,21,30,26];
+ let bars=salesByMonth.map((v,i)=>`
+ <div class="chartcol">
+ <div class="chartbar" style="height:${v*4}px"></div>
+ <small>${["May","Jun","Jul","Ago","Sep","Oct","Nov"][i]}</small>
+ </div>`).join("");
+
+ return `
+ <div class="heading">
+ <div><h1>Panel de control</h1><p>Resumen general de las operaciones logísticas.</p></div>
+ <button class="btn primary" onclick="exportJSON()">⇩ Respaldar datos</button>
+ </div>
+ <div class="grid kpis">
+ <div class="card"><div class="kpi-top"><span class="kpi-label">Valor del inventario</span><span class="kpi-icon">▤</span></div><div class="kpi-value">${money(totalInventory())}</div><div class="kpi-note">Valor estimado a costo</div></div>
+ <div class="card"><div class="kpi-top"><span class="kpi-label">Pedidos pendientes</span><span class="kpi-icon">▣</span></div><div class="kpi-value">${pendingOrders()}</div><div class="kpi-note">Requieren seguimiento</div></div>
+ <div class="card"><div class="kpi-top"><span class="kpi-label">Entregas a tiempo</span><span class="kpi-icon">✓</span></div><div class="kpi-value green">${onTimeRate()}%</div><div class="kpi-note">De entregas registradas</div></div>
+ <div class="card"><div class="kpi-top"><span class="kpi-label">Productos registrados</span><span class="kpi-icon">▥</span></div><div class="kpi-value">${db.products.length}</div><div class="kpi-note">${alerts.length} con stock bajo</div></div>
+ </div>
+ <div class="grid two">
+ <div class="card">
+ <h3>Actividad logística</h3><p class="desc">Índice ilustrativo de actividad mensual</p>
+ <div class="chartbars">${bars}</div>
+ </div>
+ <div class="card">
+ <h3>Alertas de inventario</h3><p class="desc">Productos que necesitan reposición</p>
+ ${alerts.length?alerts.map(p=>`<div class="baritem"><span>${safe(p.name)}</span><div class="track"><div class="fill" style="width:${Math.min(p.stock/p.min*100,100)}%;background:#d69b38"></div></div><b class="yellow">${p.stock}</b></div>`).join(""):'<div class="success">No existen alertas de stock.</div>'}
+ </div>
+ </div>
+ <div class="grid two section">
+ <div class="card">
+ <h3>Últimos pedidos</h3><p class="desc">Actividad reciente de clientes</p>
+ ${orderTable(db.orders.slice(-5).reverse(),false)}
+ </div>
+ <div class="card">
+ <h3>Resumen operativo</h3><p class="desc">Situación actual de la empresa</p>
+ <div class="modulegrid" style="grid-template-columns:1fr 1fr">
+ <div class="modulebox">Proveedores<strong>${db.suppliers.length}</strong></div>
+ <div class="modulebox">Vehículos<strong>${db.vehicles.length}</strong></div>
+ <div class="modulebox">Almacenes<strong>${db.warehouses.length}</strong></div>
+ <div class="modulebox">Entregas<strong>${db.deliveries.length}</strong></div>
+ </div>
+ </div>
+ </div>`;
+}
+
+// ==============================
+// 4. INVENTARIO
+// ==============================
+function inventory(){
+ return `
+ <div class="heading"><div><h1>Gestión de inventario</h1><p>Control de existencias, costos y movimientos.</p></div>
+ <button class="btn primary" onclick="productForm()">+ Nuevo producto</button></div>
+ <div class="grid kpis">
+ <div class="card"><span class="kpi-label">Productos</span><div class="kpi-value">${db.products.length}</div></div>
+ <div class="card"><span class="kpi-label">Unidades disponibles</span><div class="kpi-value">${db.products.reduce((a,p)=>a+p.stock,0)}</div></div>
+ <div class="card"><span class="kpi-label">Valor de inventario</span><div class="kpi-value">${money(totalInventory())}</div></div>
+ <div class="card"><span class="kpi-label">Stock crítico</span><div class="kpi-value red">${lowStock().length}</div></div>
+ </div>
+ <div class="card section">
+ <div class="filters"><input id="productSearch" class="search" placeholder="Buscar producto..." oninput="filterProducts()">
+ <select id="stockFilter" onchange="filterProducts()"><option value="">Todos los estados</option><option>Disponible</option><option>Stock bajo</option></select></div>
+ <div class="tablewrap"><table><thead><tr><th>CÓDIGO</th><th>PRODUCTO</th><th>CATEGORÍA</th><th>STOCK</th><th>MÍNIMO</th><th>COSTO UNIT.</th><th>VALOR TOTAL</th><th>ALMACÉN</th><th>ESTADO</th><th>ACCIONES</th></tr></thead><tbody id="productRows">${productRows(db.products)}</tbody></table></div>
+ </div>
+ <div class="card section"><h3>Movimientos de almacén</h3><p class="desc">Historial de entradas y salidas registradas</p>
+ <div class="tablewrap"><table><thead><tr><th>FECHA</th><th>TIPO</th><th>PRODUCTO</th><th>CANTIDAD</th><th>MOTIVO</th></tr></thead><tbody>
+ ${db.history.slice().reverse().map(h=>`<tr><td>${h.date}</td><td>${statusTag(h.type)}</td><td>${safe(h.product)}</td><td>${h.qty}</td><td>${safe(h.reason)}</td></tr>`).join("")}
+ </tbody></table></div></div>`;
+}
+function productRows(items){
+ return items.map(p=>`<tr>
+ <td>PR-${p.id}</td><td><b>${safe(p.name)}</b></td><td>${safe(p.category)}</td>
+ <td>${p.stock}</td><td>${p.min}</td><td>${money(p.cost)}</td>
+ <td>${money(p.stock*p.cost)}</td><td>${safe(p.warehouse)}</td>
+ <td>${statusTag(stockStatus(p))}</td>
+ <td><div class="actions"><button onclick="movement(${p.id},'Entrada')">+ Entrada</button><button onclick="movement(${p.id},'Salida')">− Salida</button><button onclick="deleteProduct(${p.id})">✕</button></div></td>
+ </tr>`).join("");
+}
+function filterProducts(){
+ let q=document.getElementById("productSearch").value.toLowerCase();
+ let f=document.getElementById("stockFilter").value;
+ let items=db.products.filter(p=>(p.name.toLowerCase().includes(q)||p.category.toLowerCase().includes(q))&&(!f||stockStatus(p)===f));
+ document.getElementById("productRows").innerHTML=productRows(items);
+}
+function productForm(){
+ let name=prompt("Nombre del producto:");
+ if(!name)return;
+ let category=prompt("Categoría:","Alimentos")||"General";
+ let stock=Number(prompt("Stock inicial:","50"));
+ let min=Number(prompt("Stock mínimo:","10"));
+ let cost=Number(prompt("Costo unitario en Bs:","10"));
+ let price=Number(prompt("Precio de venta en Bs:","15"));
+ if([stock,min,cost,price].some(n=>!Number.isFinite(n)||n<0)){toast("Datos no válidos.");return}
+ let id=Date.now();
+ db.products.push({id,name,category,stock,min,cost,price,warehouse:"Central"});
+ db.history.push({date:dateToday(),type:"Entrada",product:name,qty:stock,reason:"Registro inicial"});
+ save();render();toast("Producto registrado.");
+}
+function movement(id,type){
+ let p=db.products.find(x=>x.id===id);
+ let qty=Number(prompt("Cantidad de "+type.toLowerCase()+":"));
+ if(!Number.isInteger(qty)||qty<=0)return;
+ if(type==="Salida"&&qty>p.stock){toast("No hay existencias suficientes.");return}
+ p.stock+=type==="Entrada"?qty:-qty;
+ db.history.push({date:dateToday(),type,product:p.name,qty,reason:type==="Entrada"?"Reposición":"Salida de almacén"});
+ save();render();toast("Movimiento registrado.");
+}
+function deleteProduct(id){
+ if(!confirm("¿Eliminar este producto?"))return;
+ db.products=db.products.filter(p=>p.id!==id);save();render();
+}
+
+// ==============================
+// 5. PEDIDOS
+// ==============================
+function orderTable(items,actions=true){
+ return `<div class="tablewrap"><table><thead><tr><th>N.º PEDIDO</th><th>CLIENTE</th><th>PRODUCTO</th><th>CANT.</th><th>FECHA</th><th>TOTAL</th><th>ESTADO</th>${actions?'<th>ACCIONES</th>':''}</tr></thead><tbody>
+ ${items.map(o=>`<tr><td>#${o.id}</td><td>${safe(o.client)}</td><td>${safe(o.product)}</td><td>${o.qty}</td><td>${o.date}</td><td>${money(o.total)}</td><td>${statusTag(o.status)}</td>${actions?`<td><button class="btn light" onclick="advanceOrder(${o.id})">Actualizar</button></td>`:''}</tr>`).join("")}
+ </tbody></table></div>`;
+}
+function orders(){
+ return `<div class="heading"><div><h1>Gestión de pedidos</h1><p>Registro y seguimiento de solicitudes de clientes.</p></div><button class="btn primary" onclick="newOrder()">+ Crear pedido</button></div>
+ <div class="grid kpis">
+ <div class="card"><span class="kpi-label">Total de pedidos</span><div class="kpi-value">${db.orders.length}</div></div>
+ <div class="card"><span class="kpi-label">Pendientes</span><div class="kpi-value yellow">${pendingOrders()}</div></div>
+ <div class="card"><span class="kpi-label">Entregados</span><div class="kpi-value green">${db.orders.filter(o=>o.status==="Entregado").length}</div></div>
+ <div class="card"><span class="kpi-label">Valor total</span><div class="kpi-value">${money(db.orders.reduce((a,o)=>a+o.total,0))}</div></div>
+ </div>
+ <div class="card section">${orderTable(db.orders.slice().reverse())}</div>`;
+}
+function newOrder(){
+ let client=prompt("Nombre del cliente:");
+ if(!client)return;
+ let productName=prompt("Nombre del producto (debe existir en inventario):");
+ let p=db.products.find(x=>x.name.toLowerCase()===String(productName).toLowerCase());
+ if(!p){toast("Producto no encontrado.");return}
+ let qty=Number(prompt("Cantidad solicitada:"));
+ if(!Number.isInteger(qty)||qty<=0){toast("Cantidad no válida.");return}
+ if(qty>p.stock){toast("Stock insuficiente. Disponibles: "+p.stock);return}
+ let total=qty*p.price;
+ let zone=prompt("Zona de entrega:","Centro")||"Centro";
+ let id=Math.max(5000,...db.orders.map(o=>o.id))+1;
+ db.orders.push({id,client,product:p.name,qty,total,date:dateToday(),status:"Pendiente",zone,x:Math.random()*10,y:Math.random()*10});
+ save();render();toast("Pedido #"+id+" registrado.");
+}
+function advanceOrder(id){
+ let o=db.orders.find(x=>x.id===id);
+ let states=["Pendiente","En preparación","En tránsito","Entregado"];
+ let i=states.indexOf(o.status);
+ let next=states[Math.min(i+1,3)];
+ if(next===o.status){toast("El pedido ya fue entregado.");return}
+ if(next==="En tránsito"){
+  let p=db.products.find(x=>x.name===o.product);
+  if(p&&p.stock>=o.qty){
+   p.stock-=o.qty;
+   db.history.push({date:dateToday(),type:"Salida",product:p.name,qty:o.qty,reason:"Pedido #"+id});
+  }else if(p){toast("No hay stock suficiente.");return}
+ }
+ o.status=next;
+ if(next==="Entregado"){
+  db.deliveries.push({id:o.id,client:o.client,date:dateToday(),status:"Entregado",cost:45,onTime:true});
+ }
+ save();render();toast("Estado actualizado: "+next);
+}
+
+// ==============================
+// 6. PROVEEDORES
+// ==============================
+function suppliers(){
+ return `<div class="heading"><div><h1>Gestión de proveedores</h1><p>Directorio y control de abastecimiento.</p></div><button class="btn primary" onclick="newSupplier()">+ Agregar proveedor</button></div>
+ <div class="card"><div class="tablewrap"><table><thead><tr><th>CÓDIGO</th><th>PROVEEDOR</th><th>TELÉFONO</th><th>CATEGORÍA</th><th>TIEMPO DE ENTREGA</th><th>ESTADO</th></tr></thead><tbody>
+ ${db.suppliers.map(s=>`<tr><td>PV-${s.id}</td><td><b>${safe(s.name)}</b></td><td>${safe(s.phone)}</td><td>${safe(s.category)}</td><td>${s.lead} días</td><td>${statusTag("Disponible")}</td></tr>`).join("")}
+ </tbody></table></div></div>
+ <div class="card section"><h3>Abastecimiento y compras</h3><p class="desc">Productos que necesitan reposición</p>
+ ${lowStock().length?lowStock().map(p=>`<div class="baritem"><span>${safe(p.name)}</span><div class="track"><div class="fill" style="width:${Math.min(p.stock/p.min*100,100)}%;background:#d69b38"></div></div><b>${p.stock}/${p.min}</b></div>`).join(""):'<div class="success">Inventario sin alertas.</div>'}
+ </div>`;
+}
+function newSupplier(){
+ let name=prompt("Nombre del proveedor:");
+ if(!name)return;
+ let phone=prompt("Teléfono:");
+ let category=prompt("Categoría:");
+ let lead=Number(prompt("Tiempo de entrega en días:","3"));
+ db.suppliers.push({id:Date.now(),name,phone,category,lead});
+ save();render();toast("Proveedor agregado.");
+}
+
+// ==============================
+// 7. ALMACENES
+// ==============================
+function warehouses(){
+ return `<div class="heading"><div><h1>Gestión de almacenes</h1><p>Distribución de productos y capacidad instalada.</p></div><button class="btn primary" onclick="newWarehouse()">+ Nuevo almacén</button></div>
+ <div class="grid three">
+ ${db.warehouses.map(w=>`<div class="card"><div class="kpi-top"><h3>${safe(w.name)}</h3><span class="kpi-icon">▥</span></div><p class="desc">${safe(w.location)}</p><div class="kpi-value">${w.capacity}%</div><p class="kpi-note">Capacidad utilizada</p><div class="track"><div class="fill" style="width:${w.capacity}%"></div></div><p class="kpi-note">Responsable: ${safe(w.manager)}</p><p class="kpi-note">Productos: ${db.products.filter(p=>p.warehouse===w.name.replace("Almacén ","")).length}</p></div>`).join("")}
+ </div>
+ <div class="card section"><h3>Distribución de inventario</h3><div class="tablewrap"><table><thead><tr><th>PRODUCTO</th><th>ALMACÉN</th><th>EXISTENCIAS</th><th>VALOR</th></tr></thead><tbody>${db.products.map(p=>`<tr><td>${safe(p.name)}</td><td>${safe(p.warehouse)}</td><td>${p.stock}</td><td>${money(p.stock*p.cost)}</td></tr>`).join("")}</tbody></table></div></div>`;
+}
+function newWarehouse(){
+ let name=prompt("Nombre del almacén:");
+ if(!name)return;
+ let location=prompt("Ubicación:")||"Sin especificar";
+ let manager=prompt("Responsable:")||"Pendiente";
+ let capacity=Number(prompt("Capacidad utilizada (%):","20"));
+ if(capacity<0||capacity>100){toast("Porcentaje no válido.");return}
+ db.warehouses.push({name,location,manager,capacity});save();render();toast("Almacén registrado.");
+}
+
+// ==============================
+// 8. FLOTA
+// ==============================
+function fleet(){
+ return `<div class="heading"><div><h1>Flota y transporte</h1><p>Administración de vehículos, conductores y costos.</p></div><button class="btn primary" onclick="newVehicle()">+ Registrar vehículo</button></div>
+ <div class="grid three">
+ ${db.vehicles.map(v=>`<div class="card"><div class="kpi-top"><h3>${safe(v.model)}</h3>${statusTag(v.status)}</div><p class="desc">Vehículo ${safe(v.id)}</p><div class="kpi-value">${v.capacity} kg</div><p class="kpi-note">Capacidad máxima</p><p>Conductor: <b>${safe(v.driver)}</b></p><p>Gasto estimado: <b>${money(v.cost)}</b></p><button class="btn light" onclick="vehicleStatus('${v.id}')">Cambiar estado</button></div>`).join("")}
+ </div>
+ <div class="card section"><h3>Costos de transporte</h3><p class="desc">Costos registrados por vehículo y servicio</p>
+ <div class="tablewrap"><table><thead><tr><th>VEHÍCULO</th><th>MODELO</th><th>CONDUCTOR</th><th>CAPACIDAD</th><th>COSTO ESTIMADO</th><th>ESTADO</th></tr></thead><tbody>
+ ${db.vehicles.map(v=>`<tr><td>${v.id}</td><td>${safe(v.model)}</td><td>${safe(v.driver)}</td><td>${v.capacity} kg</td><td>${money(v.cost)}</td><td>${statusTag(v.status)}</td></tr>`).join("")}
+ </tbody></table></div></div>`;
+}
+function newVehicle(){
+ let model=prompt("Modelo del vehículo:");
+ if(!model)return;
+ let driver=prompt("Nombre del conductor:");
+ let capacity=Number(prompt("Capacidad en kg:"));
+ let cost=Number(prompt("Costo estimado por viaje en Bs:"));
+ db.vehicles.push({id:"V-"+Date.now().toString().slice(-4),model,driver,capacity,status:"Disponible",cost});
+ save();render();toast("Vehículo registrado.");
+}
+function vehicleStatus(id){
+ let v=db.vehicles.find(x=>x.id===id);
+ v.status=v.status==="Disponible"?"En ruta":"Disponible";
+ save();render();toast("Estado del vehículo actualizado.");
+}
+
+// ==============================
+// 9. PLANIFICADOR DE RUTAS
+// ==============================
+function routes(){
+ let pending=db.orders.filter(o=>o.status!=="Entregado");
+ return `<div class="heading"><div><h1>Planificador de rutas</h1><p>Organiza las entregas y reduce recorridos innecesarios.</p></div><button class="btn primary" onclick="optimizeRoute()">✦ Optimizar recorrido</button></div>
+ <div class="alert">La planificación utiliza coordenadas de demostración y una heurística de cercanía. No representa navegación GPS ni tráfico real.</div>
+ <div class="grid two">
+ <div class="card"><h3>Pedidos pendientes de entrega</h3><p class="desc">Destinos disponibles para planificar</p>
+ ${pending.length?pending.map(o=>`<div class="route-stop"><input type="checkbox" class="routeCheck" value="${o.id}" checked><div><b>${safe(o.client)}</b><br><span class="sub">${safe(o.zone)} · Pedido #${o.id}</span></div></div>`).join(""):'<div class="empty">No hay pedidos pendientes.</div>'}
+ </div>
+ <div class="card"><h3>Parámetros de transporte</h3><p class="desc">Configuración del recorrido</p>
+ <div class="field"><label>Vehículo</label><select id="routeVehicle">${db.vehicles.map(v=>`<option value="${v.id}">${safe(v.id)} · ${safe(v.model)} (${v.capacity} kg)</option>`).join("")}</select></div>
+ <div class="field" style="margin-top:12px"><label>Distancia estimada entre puntos (km)</label><input id="distanceFactor" type="number" value="2" min="0.1" step=".1"></div>
+ <div class="field" style="margin-top:12px"><label>Costo por kilómetro (Bs)</label><input id="kmCost" type="number" value="3.5" min="0" step=".1"></div>
+ </div>
+ </div>
+ <div class="card section"><h3>Secuencia de entregas</h3><p class="desc">Resultado de la planificación</p><div id="routeResult" class="empty">Selecciona pedidos y pulsa «Optimizar recorrido».</div></div>`;
+}
+function optimizeRoute(){
+ let ids=[...document.querySelectorAll(".routeCheck:checked")].map(x=>Number(x.value));
+ let stops=db.orders.filter(o=>ids.includes(o.id));
+ if(!stops.length){toast("Selecciona al menos un pedido.");return}
+ let factor=Number(document.getElementById("distanceFactor").value)||2;
+ let cost=Number(document.getElementById("kmCost").value)||0;
+ let vehicle=db.vehicles.find(v=>v.id===document.getElementById("routeVehicle").value);
+ let totalWeight=stops.reduce((a,o)=>a+o.qty,0);
+ if(vehicle&&totalWeight>vehicle.capacity){toast("La carga supera la capacidad del vehículo.");return}
+ let current={x:0,y:0};
+ let remaining=[...stops],ordered=[],distance=0;
+ while(remaining.length){
+  remaining.sort((a,b)=>Math.hypot(a.x-current.x,a.y-current.y)-Math.hypot(b.x-current.x,b.y-current.y));
+  let next=remaining.shift();
+  distance+=Math.hypot(next.x-current.x,next.y-current.y)*factor;
+  ordered.push(next);current=next;
+ }
+ distance+=Math.hypot(current.x,current.y)*factor;
+ let totalCost=distance*cost;
+ document.getElementById("routeResult").innerHTML=`
+ <div class="grid three">
+ <div class="modulebox">Distancia estimada<strong>${distance.toFixed(2)} km</strong></div>
+ <div class="modulebox">Costo estimado<strong>${money(totalCost)}</strong></div>
+ <div class="modulebox">Destinos<strong>${ordered.length}</strong></div>
+ </div>
+ <div class="route-list" style="margin-top:15px">
+ <div class="route-stop"><div class="route-number">0</div><b>Almacén central · Salida</b></div>
+ ${ordered.map((o,i)=>`<div class="route-stop"><div class="route-number">${i+1}</div><div><b>${safe(o.client)}</b><br><span class="sub">Pedido #${o.id} · ${safe(o.zone)}</span></div></div>`).join("")}
+ <div class="route-stop"><div class="route-number">✓</div><b>Regreso al almacén</b></div>
+ </div>
+ <div class="success" style="margin-top:15px">Recorrido organizado mediante selección sucesiva del destino más cercano. Distancia y costo son estimaciones de demostración.</div>`;
+}
+
+// ==============================
+// 10. ENTREGAS
+// ==============================
+function deliveries(){
+ let total=db.deliveries.length;
+ let timely=onTimeRate();
+ return `<div class="heading"><div><h1>Control de entregas</h1><p>Seguimiento del cumplimiento y calidad del servicio.</p></div><button class="btn primary" onclick="manualDelivery()">+ Registrar entrega</button></div>
+ <div class="grid three">
+ <div class="card"><span class="kpi-label">Entregas registradas</span><div class="kpi-value">${total}</div></div>
+ <div class="card"><span class="kpi-label">Entregas a tiempo</span><div class="kpi-value green">${timely}%</div></div>
+ <div class="card"><span class="kpi-label">Costo promedio</span><div class="kpi-value">${money(total?db.deliveries.reduce((a,d)=>a+d.cost,0)/total:0)}</div></div>
+ </div>
+ <div class="card section"><h3>Historial de entregas</h3><div class="tablewrap"><table><thead><tr><th>PEDIDO</th><th>CLIENTE</th><th>FECHA</th><th>COSTO</th><th>RESULTADO</th><th>ACCIONES</th></tr></thead><tbody>
+ ${db.deliveries.map(d=>`<tr><td>#${d.id}</td><td>${safe(d.client)}</td><td>${d.date}</td><td>${money(d.cost)}</td><td>${statusTag(d.onTime?"A tiempo":"Retrasado")}</td><td><button class="btn light" onclick="toggleDelivery(${d.id})">Cambiar puntualidad</button></td></tr>`).join("")}
+ </tbody></table></div></div>`;
+}
+function manualDelivery(){
+ let client=prompt("Cliente:");
+ if(!client)return;
+ let cost=Number(prompt("Costo de entrega en Bs:","35"));
+ let onTime=confirm("¿La entrega fue realizada a tiempo?");
+ db.deliveries.push({id:Date.now(),client,date:dateToday(),status:"Entregado",cost,onTime});
+ save();render();toast("Entrega registrada.");
+}
+function toggleDelivery(id){
+ let d=db.deliveries.find(x=>x.id===id);
+ d.onTime=!d.onTime;save();render();
+}
+
+// ==============================
+// 11. REPORTES E INDICADORES
+// ==============================
+function reports(){
+ let totalOrders=db.orders.length;
+ let delivered=db.orders.filter(o=>o.status==="Entregado").length;
+ let fulfillment=totalOrders?delivered/totalOrders*100:0;
+ let transport=db.deliveries.reduce((a,d)=>a+d.cost,0);
+ let avgCost=db.deliveries.length?transport/db.deliveries.length:0;
+ let inventory=totalInventory();
+ let units=db.products.reduce((a,p)=>a+p.stock,0);
+ let bars=db.products.slice(0,8).map(p=>`
+ <div class="baritem"><span>${safe(p.name)}</span><div class="track"><div class="fill" style="width:${Math.min(p.stock/Math.max(...db.products.map(x=>x.stock),1)*100,100)}%"></div></div><b>${p.stock}</b></div>`).join("");
+ return `<div class="heading"><div><h1>Reportes e indicadores</h1><p>Evaluación del rendimiento logístico de la empresa.</p></div><button class="btn primary" onclick="window.print()">Imprimir reporte</button></div>
+ <div class="grid kpis">
+ <div class="card"><span class="kpi-label">Cumplimiento de pedidos</span><div class="kpi-value">${fulfillment.toFixed(1)}%</div><small class="kpi-note">Entregados / total pedidos</small></div>
+ <div class="card"><span class="kpi-label">Entregas a tiempo</span><div class="kpi-value green">${onTimeRate()}%</div><small class="kpi-note">Puntualidad registrada</small></div>
+ <div class="card"><span class="kpi-label">Costo promedio por entrega</span><div class="kpi-value">${money(avgCost)}</div><small class="kpi-note">Costo / entregas registradas</small></div>
+ <div class="card"><span class="kpi-label">Valor de existencias</span><div class="kpi-value">${money(inventory)}</div><small class="kpi-note">Inventario a costo</small></div>
+ </div>
+ <div class="grid two section">
+ <div class="card"><h3>Distribución de existencias</h3><p class="desc">Unidades disponibles por producto</p>${bars}</div>
+ <div class="card"><h3>Indicadores y fórmulas</h3><p class="desc">Metodología utilizada por el sistema</p>
+ <div class="modulebox"><b>OTIF simplificado</b><p class="desc">Entregas a tiempo / entregas registradas × 100</p><strong>${onTimeRate()}%</strong></div>
+ <div class="modulebox" style="margin-top:10px"><b>Rotación estimada</b><p class="desc">No disponible sin consumo o costo de ventas del periodo.</p><strong>Requiere datos históricos</strong></div>
+ <div class="modulebox" style="margin-top:10px"><b>Costo por entrega</b><p class="desc">Gastos registrados / número de entregas</p><strong>${money(avgCost)}</strong></div>
+ </div>
+ </div>
+ <div class="card section"><h3>Resumen de inventario</h3><div class="tablewrap"><table><thead><tr><th>PRODUCTO</th><th>UNIDADES</th><th>COSTO UNITARIO</th><th>VALOR TOTAL</th><th>ESTADO</th></tr></thead><tbody>
+ ${db.products.map(p=>`<tr><td>${safe(p.name)}</td><td>${p.stock}</td><td>${money(p.cost)}</td><td>${money(p.stock*p.cost)}</td><td>${statusTag(stockStatus(p))}</td></tr>`).join("")}
+ </tbody></table></div></div>
+ <div class="actions noprint" style="margin-top:15px"><button class="btn primary" onclick="exportCSV()">Descargar inventario CSV</button><button class="btn light" onclick="exportJSON()">Respaldar base de datos</button></div>`;
+}
+
+// ==============================
+// 12. EXPORTACIONES
+// ==============================
+function downloadFile(name,content,type){
+ let blob=new Blob(["\ufeff"+content],{type});
+ let a=document.createElement("a");
+ a.href=URL.createObjectURL(blob);a.download=name;a.click();
+ URL.revokeObjectURL(a.href);
+}
+function exportCSV(){
+ let headers=["ID","Producto","Categoría","Stock","Mínimo","Costo","Precio","Almacén"];
+ let rows=db.products.map(p=>[p.id,p.name,p.category,p.stock,p.min,p.cost,p.price,p.warehouse]);
+ downloadFile("inventario_logistix.csv",[headers,...rows].map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(",")).join("\n"),"text/csv;charset=utf-8");
+ toast("Archivo CSV generado.");
+}
+function exportJSON(){
+ downloadFile("respaldo_logistix.json",JSON.stringify(db,null,2),"application/json");
+ toast("Respaldo generado.");
+}
+
+// ==============================
+// 13. RENDERIZADO
+// ==============================
+function render(){
+ document.getElementById("topTitle").textContent=titles[currentPage];
+ const pages={
+ dashboard,inventory,orders,suppliers,warehouses,
+ fleet,routes,deliveries,reports
+ };
+ document.getElementById("view").innerHTML=pages[currentPage]();
+}
+render();
+</script>
+</body>
+</html>
